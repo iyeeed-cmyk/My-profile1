@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iyed Wederni | Profile</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* === متغيرات الألوان (Theme Variables) === */
+        :root {
+            --bg-color: #f4f4f9;
+            --container-bg: #ffffff;
+            --text-color: #333333;
+            --text-secondary: #666666;
+            --accent-color: #3498db;
+            --hover-color: #2980b9;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --transition: all 0.3s ease;
+        }
+
+        /* وضع الظلام */
+        body.dark-mode {
+            --bg-color: #121212;
+            --container-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --text-secondary: #aaaaaa;
+            --shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: var(--transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* === الشريط العلوي === */
+        header {
+            width: 100%;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 800px;
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-color);
+            font-size: 1.5rem;
+            transition: var(--transition);
+            padding: 10px;
+            border-radius: 50%;
+        }
+
+        .icon-btn:hover { background-color: rgba(128,128,128,0.1); }
+
+        /* === القائمة الجانبية للإعدادات === */
+        .settings-menu {
+            position: fixed;
+            top: 0;
+            left: -250px; /* مخفية في البداية */
+            width: 250px;
+            height: 100vh;
+            background-color: var(--container-bg);
+            box-shadow: var(--shadow);
+            z-index: 1000;
+            transition: var(--transition);
+            padding: 20px;
+        }
+
+        .settings-menu.active { left: 0; }
+        
+        .settings-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 30px;
+            font-weight: bold;
+        }
+
+        .settings-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: var(--transition);
+        }
+
+        .settings-item:hover { background-color: rgba(128,128,128,0.1); }
+
+        /* === المحتوى الرئيسي === */
+        main {
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+            margin-top: 40px;
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        .profile-card {
+            background-color: var(--container-bg);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .profile-img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid var(--accent-color);
+            margin-bottom: 20px;
+            background-color: #ddd; /* لون مؤقت في حال لم توجد صورة */
+        }
+
+        h1 { margin-bottom: 10px; font-size: 2rem; }
+        
+        .bio-text {
+            color: var(--text-secondary);
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        /* === روابط التواصل الاجتماعي === */
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .social-btn {
+            text-decoration: none;
+            color: var(--container-bg);
+            background-color: var(--text-color);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .social-btn:hover {
+            transform: translateY(-5px);
+            background-color: var(--accent-color);
+        }
+
+        /* === الخبر العاجل (Teaser) === */
+        .teaser-section {
+            margin-top: 40px;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .teaser-content h3 { margin-bottom: 10px; }
+        .teaser-content p { font-size: 0.9rem; opacity: 0.9; }
+
+        /* تأثيرات بسيطة */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Overlay لإغلاق القائمة عند الضغط خارجها */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 900;
+        }
+        .overlay.active { display: block; }
+
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay" onclick="toggleSettings()"></div>
+    <div class="settings-menu" id="settingsMenu">
+        <div class="settings-header">
+            <span>Settings</span>
+            <span style="cursor:pointer;" onclick="toggleSettings()">✕</span>
+        </div>
+        
+        <div class="settings-item" onclick="changeLanguage()">
+            <i class="fas fa-language"></i>
+            <span>Switch to Arabic</span>
+        </div>
+        
+        <div class="settings-item" onclick="shareProfile()">
+            <i class="fas fa-share-alt"></i>
+            <span>Share Profile</span>
+        </div>
+    </div>
+
+    <header>
+        <button class="icon-btn" onclick="toggleSettings()">
+            <i class="fas fa-cog"></i> </button>
+        <button class="icon-btn" onclick="toggleTheme()">
+            <i class="fas fa-moon" id="themeIcon"></i> </button>
+    </header>
+
+    <main>
+        <div class="profile-card">
+            <img src="https://ui-avatars.com/api/?name=Iyed+Wederni&background=3498db&color=fff" alt="Iyed Wederni" class="profile-img">
+            
+            <h1>Iyed Wederni</h1>
+            
+            <p class="bio-text">
+                Hello! I am a passionate developer. This is my personal space where I share my work and thoughts. 
+                <br>
+                - New Web Devlopper
+                - You can contact me in those apps:
+            </p>
+
+            <div class="social-links">
+                <a href="https://www.facebook.com/iyed.wederni.2025" target="_blank" class="social-btn">
+                    <i class="fab fa-facebook-f"></i>
+                </a>
+                
+                <a href="https://www.instagram.com/iyeed__weed/" target="_blank" class="social-btn">
+                    <i class="fab fa-instagram"></i>
+                </a>
+                
+                <a href="https://github.com/iyeeed-cmyk" target="_blank" class="social-btn">
+                    <i class="fab fa-github"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="teaser-section">
+            <div class="teaser-content">
+                <h3>🚀 Something Big is Coming!</h3>
+                <p>I am currently working on a brand new, cutting-edge website. Stay tuned for a unique digital experience.</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // 1. كود تغيير الثيم (Dark/Light)
+        const body = document.body;
+        const themeIcon = document.getElementById('themeIcon');
+
+        function toggleTheme() {
+            body.classList.toggle('dark-mode');
+            
+            // تغيير الأيقونة
+            if (body.classList.contains('dark-mode')) {
+                themeIcon.classList.remove('fa-moon');
+                themeIcon.classList.add('fa-sun');
+            } else {
+                themeIcon.classList.remove('fa-sun');
+                themeIcon.classList.add('fa-moon');
+            }
+        }
+
+        // 2. كود فتح وإغلاق الإعدادات
+        const settingsMenu = document.getElementById('settingsMenu');
+        const overlay = document.getElementById('overlay');
+
+        function toggleSettings() {
+            settingsMenu.classList.toggle('active');
+            overlay.classList.toggle('active');
+        }
+
+        // 3. كود وهمي لتغيير اللغة (يمكنك برمجته لاحقاً ليغير النصوص فعلياً)
+        function changeLanguage() {
+            alert("Language switch feature will be available soon! (Arabic is coming)");
+            toggleSettings();
+        }
+
+        // 4. كود المشاركة (إضافة إضافية)
+        function shareProfile() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Iyed Wederni',
+                    url: window.location.href
+                });
+            } else {
+                alert("URL copied to clipboard!");
+            }
+        }
+    </script>
+</body>
+</html>
